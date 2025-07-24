@@ -1,25 +1,33 @@
 const map = L.map('map').setView([51.5074, -0.1278], 12);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
  attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
- maxZoom: 19,
+ subdomains: 'abcd',
+ maxZoom: 19
 }).addTo(map);
-map.on('click', function(e) {
+// Custom blue marker
+const customIcon = L.icon({
+ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+ shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+ iconSize: [25, 41],
+ iconAnchor: [12, 41],
+ popupAnchor: [1, -34],
+ shadowSize: [41, 41]
+});
+map.on('click', function (e) {
  const lat = e.latlng.lat.toFixed(5);
  const lng = e.latlng.lng.toFixed(5);
  const popupContent = `
-<div style="font-family: 'Georgia', serif; max-width: 250px;">
+<div>
 <strong>Memory at this place:</strong><br>
-<textarea id="memory" rows="3" cols="28" placeholder="Write your memory..." style="margin-top: 5px;"></textarea><br>
-<input type="text" id="songLink" placeholder="Paste Spotify or YouTube link" style="width: 95%; margin-top: 5px;"><br>
-<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 8px;">Add</button>
-</div>
- `;
+<textarea id="memory" rows="3" cols="28" placeholder="Write your memory..."></textarea><br>
+<input type="text" id="songLink" placeholder="Paste Spotify or YouTube link"><br>
+<button onclick="addMemory(${lat}, ${lng})">Add</button>
+</div>`;
  L.popup()
    .setLatLng([lat, lng])
    .setContent(popupContent)
    .openOn(map);
 });
-// Add marker with embedded media
 function addMemory(lat, lng) {
  const memory = document.getElementById("memory").value;
  const songLink = document.getElementById("songLink").value;
@@ -38,12 +46,11 @@ function addMemory(lat, lng) {
    }
  }
  const finalPopup = `
-<div style="font-family: 'Georgia', serif; font-size: 14px; max-width: 250px;">
+<div style="font-family: 'Georgia', serif; font-size: 14px;">
 <p>${memory}</p>
      ${embedHTML}
-</div>
- `;
- L.marker([lat, lng])
+</div>`;
+ L.marker([lat, lng], { icon: customIcon })
    .addTo(map)
    .bindPopup(finalPopup)
    .openPopup();
