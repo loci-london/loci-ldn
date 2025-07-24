@@ -3,19 +3,25 @@
 <head>
 <meta charset="UTF-8" />
 <title>Loci: LDN</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- ✅ Import Google Font: Work Sans (for title) -->
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&display=swap" rel="stylesheet" />
+<!-- Leaflet styles -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Your CSS -->
 <link rel="stylesheet" href="style.css" />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
+<!-- Page header -->
 <div class="header">
-<h1>Loci: LDN</h1>
+<h1>LOCI: LDN</h1>
 <p>A map of memory, music, and place.</p>
 </div>
+<!-- Centered map with Polaroid-style border -->
 <div class="map-wrapper">
 <div id="map"></div>
 </div>
+<!-- Leaflet JS + your map logic -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="script.js"></script>
 </body>
