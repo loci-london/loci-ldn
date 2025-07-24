@@ -1,14 +1,8 @@
 const map = L.map('map').setView([51.5074, -0.1278], 12);
-// Base map: CyclOSM
-L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
- attribution: '&copy; CyclOSM & OpenStreetMap contributors',
- maxZoom: 20
-}).addTo(map);
-// Overlay: Rail & Tube lines from OpenRailwayMap
-L.tileLayer('https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
- attribution: 'Map data © OpenRailwayMap',
- maxZoom: 19,
- opacity: 0.5
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+ attribution: '&copy; OpenStreetMap & CartoDB',
+ subdomains: 'abcd',
+ maxZoom: 19
 }).addTo(map);
 map.on('click', function(e) {
  const lat = e.latlng.lat.toFixed(5);
