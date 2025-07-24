@@ -1,10 +1,10 @@
 // Create the map and center it on London
 const map = L.map('map').setView([51.5074, -0.1278], 12);
-// Add the tile layer (map visuals)
+// Add the tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
  attribution: '© OpenStreetMap contributors'
 }).addTo(map);
-// When user clicks on the map
+// Handle clicks on the map
 map.on('click', function (e) {
  const lat = e.latlng.lat.toFixed(5);
  const lng = e.latlng.lng.toFixed(5);
