@@ -1,7 +1,8 @@
 const map = L.map('map').setView([51.5074, -0.1278], 12);
-L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {
- attribution: '&copy; Stamen Design',
- maxZoom: 16
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+ attribution: '&copy; CartoDB & OpenStreetMap contributors',
+ subdomains: 'abcd',
+ maxZoom: 19
 }).addTo(map);
 map.on('click', function(e) {
  const lat = e.latlng.lat.toFixed(5);
