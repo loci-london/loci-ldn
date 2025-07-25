@@ -134,15 +134,17 @@ h1 {
     right: 12px;
   }
 }
-.about-footer {
+.about-footer-box {
  position: fixed;
  bottom: 20px;
- left: 20px;
+ right: 30px;
+ border: 1px dotted #222;
+ padding: 6px 10px;
  font-family: 'Courier New', monospace;
  font-size: 11px;
  color: #222;
- opacity: 0.6;
- letter-spacing: 0.4px;
+ opacity: 0.7;
+ background-color: #fff;
  pointer-events: none;
  user-select: none;
 }
