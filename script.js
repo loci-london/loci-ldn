@@ -98,3 +98,10 @@ document.addEventListener("DOMContentLoaded", function () {
    }
  });
 });
+// Dismiss intro overlay on first click
+document.addEventListener('click', () => {
+ const overlay = document.getElementById('introOverlay');
+ if (overlay) {
+   overlay.style.display = 'none';
+ }
+}, { once: true });
