@@ -1,4 +1,23 @@
+// Firebase config
+const firebaseConfig = {
+ apiKey: "AIzaSyANy4eUzYrkCg-WIKd8aYbDehoxlXeWo8w",
+ authDomain: "loci-ldn.firebaseapp.com",
+ projectId: "loci-ldn",
+ storageBucket: "loci-ldn.appspot.com",
+ messagingSenderId: "41724768309",
+ appId: "1:41724768309:web:44be011f074d75041cc17c",
+ measurementId: "G-KZ3H3L6K2Y"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 const map = L.map('map').setView([51.5074, -0.1278], 12);
+db.collection("memories").get().then(snapshot => {
+ snapshot.forEach(doc => {
+   const data = doc.data();
+   createMarker(data.lat, data.lng, data.memory, data.songLink);
+ });
+});
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
  attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
  subdomains: 'abcd',
@@ -31,6 +50,18 @@ map.on('click', function (e) {
 function addMemory(lat, lng) {
  const memory = document.getElementById("memory").value;
  const songLink = document.getElementById("songLink").value;
+ // Save to Firebase
+ db.collection("memories").add({
+   lat,
+   lng,
+   memory,
+   songLink
+ });
+ // Also add it to the map visually
+ createMarker(lat, lng, memory, songLink);
+}
+
+function createMarker(lat, lng, memory, songLink) {
  let embedHTML = "";
  if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
    const videoId = songLink.includes("youtu.be")
@@ -46,12 +77,12 @@ function addMemory(lat, lng) {
    }
  }
  const finalPopup = `
-<div style="font-family: 'Georgia', serif; font-size: 14px;">
+<div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px;">
 <p>${memory}</p>
      ${embedHTML}
-</div>`;
- L.marker([lat, lng], { icon: customIcon })
+</div>
+ `;
+ L.marker([lat, lng])
    .addTo(map)
-   .bindPopup(finalPopup)
-   .openPopup();
+   .bindPopup(finalPopup);
 }
