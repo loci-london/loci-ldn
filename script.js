@@ -83,3 +83,18 @@ function createMarker(lat, lng, memory, songLink) {
    .addTo(map)
    .bindPopup(finalPopup);
 }
+// Help toggle logic
+document.addEventListener("DOMContentLoaded", function () {
+ const helpButton = document.getElementById("help-button");
+ const helpBox = document.getElementById("help-box");
+ helpButton.addEventListener("click", function (e) {
+   e.stopPropagation();
+   helpBox.style.display = helpBox.style.display === "block" ? "none" : "block";
+ });
+ // Hide help box when clicking outside of it
+ document.addEventListener("click", function (e) {
+   if (!helpBox.contains(e.target) && e.target !== helpButton) {
+     helpBox.style.display = "none";
+   }
+ });
+});
