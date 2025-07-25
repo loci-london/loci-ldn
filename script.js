@@ -1,6 +1,6 @@
 // Firebase config
 const firebaseConfig = {
- apiKey: "AIzaSyANy4eUzYrkCg-WIKd8aYbDehoxlXeWo8w",
+ apiKey: "AIzaSyANy4eUYrkCg-WIKd8aYbDehoxLXeWo8w",
  authDomain: "loci-ldn.firebaseapp.com",
  projectId: "loci-ldn",
  storageBucket: "loci-ldn.appspot.com",
@@ -11,6 +11,7 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+// Map setup
 const map = L.map('map').setView([51.5074, -0.1278], 12);
 db.collection("memories").get().then(snapshot => {
  snapshot.forEach(doc => {
@@ -23,12 +24,12 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
  subdomains: 'abcd',
  maxZoom: 19
 }).addTo(map);
-// Custom starburst marker
+// Custom marker
 const customIcon = L.icon({
- iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png', // starburst style
+ iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png', // starburst icon
  iconSize: [30, 30],
  iconAnchor: [15, 30],
- popupAnchor: [0, -30],
+ popupAnchor: [0, -30]
 });
 map.on('click', function (e) {
  const lat = e.latlng.lat.toFixed(5);
@@ -39,7 +40,8 @@ map.on('click', function (e) {
 <textarea id="memory" rows="3" cols="28" placeholder="Write your memory..."></textarea><br>
 <input type="text" id="songLink" placeholder="Paste Spotify or YouTube link"><br>
 <button onclick="addMemory(${lat}, ${lng})">Add</button>
-</div>`;
+</div>
+ `;
  L.popup()
    .setLatLng([lat, lng])
    .setContent(popupContent)
@@ -48,17 +50,14 @@ map.on('click', function (e) {
 function addMemory(lat, lng) {
  const memory = document.getElementById("memory").value;
  const songLink = document.getElementById("songLink").value;
- // Save to Firebase
  db.collection("memories").add({
    lat,
    lng,
    memory,
    songLink
  });
- // Also add it to the map visually
  createMarker(lat, lng, memory, songLink);
 }
-
 function createMarker(lat, lng, memory, songLink) {
  let embedHTML = "";
  if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
@@ -74,13 +73,13 @@ function createMarker(lat, lng, memory, songLink) {
      embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameborder="0" allow="encrypted-media"></iframe>`;
    }
  }
-const finalPopup = `
+ const finalPopup = `
 <div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px;">
 <p>${memory}</p>
-   ${embedHTML}
+     ${embedHTML}
 </div>
-`;
- L.marker([lat, lng]), { icon: customIcon })
+ `;
+ L.marker([lat, lng], { icon: customIcon })
    .addTo(map)
    .bindPopup(finalPopup);
 }
