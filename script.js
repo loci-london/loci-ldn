@@ -23,14 +23,12 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
  subdomains: 'abcd',
  maxZoom: 19
 }).addTo(map);
-// Custom blue marker
+// Custom starburst marker
 const customIcon = L.icon({
- iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
- shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
- iconSize: [25, 41],
- iconAnchor: [12, 41],
- popupAnchor: [1, -34],
- shadowSize: [41, 41]
+ iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png', // starburst style
+ iconSize: [30, 30],
+ iconAnchor: [15, 30],
+ popupAnchor: [0, -30],
 });
 map.on('click', function (e) {
  const lat = e.latlng.lat.toFixed(5);
@@ -82,7 +80,7 @@ function createMarker(lat, lng, memory, songLink) {
      ${embedHTML}
 </div>
  `;
- L.marker([lat, lng])
+ L.marker([lat, lng]), { icon: customIcon })
    .addTo(map)
    .bindPopup(finalPopup);
 }
