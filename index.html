@@ -2,28 +2,31 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Loci: LDN</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<!-- ✅ Import Google Font: Work Sans (for title) -->
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&display=swap" rel="stylesheet" />
-<!-- Leaflet styles -->
+<title>Loci: LDN</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+<!-- Leaflet Styles -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<!-- Your CSS -->
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<!-- Page header -->
-<div class="header">
-<h1>LOCI: LDN</h1>
-<p>A map of memory, music, and place.</p>
-</div>
-<!-- Centered map with Polaroid-style border -->
-<div class="map-wrapper">
+<header>
+<h1>Loci: LDN</h1>
+<p class="subtitle">A map of memory, music, and place.</p>
+</header>
+<main>
+<div class="map-border">
 <div id="map"></div>
 </div>
-<!-- Leaflet JS + your map logic -->
+</main>
+<footer>
+<p class="stamp-left">⟡ 2025-07-25</p>
+<p class="stamp-right">LOCI: LDN Project © 2025</p>
+</footer>
+<!-- Scripts -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <script src="script.js"></script>
