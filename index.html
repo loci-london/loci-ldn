@@ -3,30 +3,37 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>— LOCI: LDN —</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap" rel="stylesheet" />
+<title>-- LOCI: LDN --</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet" />
+<!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Your styles -->
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="stamp top-left">JULY 2025</div>
-<header>
-<h1>— LOCI: LDN —</h1>
-<p>A map of memory, music, and place.</p>
-</header>
+<div class="header">
+<h1>-- LOCI: LDN --</h1>
+<div class="tagline">
+<span>MEMORY</span>
+<span>MUSIC</span>
+<span>PLACE</span>
+</div>
+</div>
 <div class="map-wrapper">
 <div id="map"></div>
+<div class="map-footer">
+<span>MAP NO. 001</span>
+<span>© 2025</span>
 </div>
-<div class="stamp bottom-right">MAP No. 001</div>
-<footer>
-   LOCI: LDN Project © 2025
-</footer>
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+</div>
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<!-- Your logic -->
 <script src="script.js"></script>
 </body>
 </html>
