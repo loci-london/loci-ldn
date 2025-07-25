@@ -24,9 +24,9 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
  subdomains: 'abcd',
  maxZoom: 19
 }).addTo(map);
-// Custom marker
+// Starburst-style black icon
 const customIcon = L.icon({
- iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png', // starburst icon
+ iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
  iconSize: [30, 30],
  iconAnchor: [15, 30],
  popupAnchor: [0, -30]
