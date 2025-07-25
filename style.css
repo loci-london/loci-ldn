@@ -107,19 +107,31 @@ h1 {
  text-transform: lowercase;
 }
 .about-button {
- position: absolute;
- top: 20px;
- right: 20px;
- font-family: 'Courier Prime', monospace;
- font-size: 13px;
- padding: 6px 10px;
- border: 1px dashed #000;
- background: white;
- text-decoration: none;
- color: black;
- z-index: 1000;
- transition: background 0.2s ease;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 13px;
+  padding: 6px 10px;
+  border: 1px dashed #000;
+  background: white;
+  text-decoration: none;
+  color: black;
+  text-transform: uppercase;
+  z-index: 1000;
+  transition: background 0.2s ease;
 }
+
 .about-button:hover {
- background: #f0f0f0;
+  background: #f0f0f0;
 }
+
+@media (max-width: 600px) {
+  .about-button {
+    font-size: 12px;
+    padding: 5px 8px;
+    top: 12px;
+    right: 12px;
+  }
+}
+ 
