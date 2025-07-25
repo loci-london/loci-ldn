@@ -35,13 +35,13 @@ map.on('click', function (e) {
  const lat = e.latlng.lat.toFixed(5);
  const lng = e.latlng.lng.toFixed(5);
  const popupContent = `
-<div>
+<div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
 <strong>Memory at this place:</strong><br>
-<textarea id="memory" rows="3" cols="28" placeholder="Write your memory..."></textarea><br>
-<input type="text" id="songLink" placeholder="Paste Spotify or YouTube link"><br>
-<button onclick="addMemory(${lat}, ${lng})">Add</button>
+<textarea id="memory" rows="4" cols="30" placeholder="Write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea><br>
+<input type="text" id="songLink" placeholder="Paste Spotify or YouTube link" style="width: 100%; margin-top: 6px; padding: 4px;"><br>
+<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 8px;">Add</button>
 </div>
- `;
+`;
  L.popup()
    .setLatLng([lat, lng])
    .setContent(popupContent)
