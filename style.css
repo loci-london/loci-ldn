@@ -1,62 +1,44 @@
 body {
  margin: 0;
  font-family: 'Work Sans', sans-serif;
- background-color: white;
- color: black;
- position: relative;
+ background-color: #fff;
+ color: #000;
 }
-header {
+h1 {
+ font-size: 1.8rem;
+ font-weight: 600;
+ letter-spacing: -1px;
  text-align: center;
- padding: 1.5em 0 0.5em;
+ margin: 1.5rem 0 0.5rem;
 }
-header h1 {
- font-size: 2em;
- font-weight: 700;
- letter-spacing: 0.1em;
- text-transform: uppercase;
-}
-header p {
- font-size: 1em;
- font-family: 'Courier New', monospace;
- margin-top: 0.2em;
+.tagline {
+ text-align: center;
+ font-family: 'Courier Prime', monospace;
+ font-size: 0.9rem;
+ letter-spacing: 2px;
+ display: flex;
+ justify-content: center;
+ gap: 1.2rem;
+ margin-bottom: 1.5rem;
 }
 .map-wrapper {
- padding: 20px;
- border: 1px dotted black;
  margin: 0 auto;
- max-width: 90vw;
+ width: 90%;
+ max-width: 800px;
+ padding: 1.5rem;
+ border: 2px dashed #000;
+ position: relative;
  box-sizing: border-box;
 }
 #map {
+ height: 75vh;
  width: 100%;
- height: 65vh;
+ border: 1px solid #000;
 }
-/* Popup Styling */
-.leaflet-popup-content {
- font-family: 'Courier New', monospace;
- font-size: 14px;
-}
-/* Footer */
-footer {
- text-align: center;
- font-family: 'Courier New', monospace;
- font-size: 12px;
- margin: 20px 0;
-}
-/* Zine-style Stamps */
-.stamp {
- font-family: 'Courier New', monospace;
- font-size: 12px;
- border: 1px dotted black;
- padding: 5px 8px;
- position: absolute;
- background-color: white;
-}
-.top-left {
- top: 8px;
- left: 8px;
-}
-.bottom-right {
- bottom: 8px;
- right: 8px;
+.map-footer {
+ font-family: 'Courier Prime', monospace;
+ font-size: 0.8rem;
+ display: flex;
+ justify-content: space-between;
+ margin-top: 0.5rem;
 }
