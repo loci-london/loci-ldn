@@ -3,32 +3,30 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Loci: LDN</title>
+<title>— LOCI: LDN —</title>
 <!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
-<!-- Leaflet Styles -->
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<div class="stamp top-left">JULY 2025</div>
 <header>
-<h1>Loci: LDN</h1>
-<p class="subtitle">A map of memory, music, and place.</p>
+<h1>— LOCI: LDN —</h1>
+<p>A map of memory, music, and place.</p>
 </header>
-<main>
-<div class="map-border">
+<div class="map-wrapper">
 <div id="map"></div>
 </div>
-</main>
+<div class="stamp bottom-right">MAP No. 001</div>
 <footer>
-<p class="stamp-left">⟡ 2025-07-25</p>
-<p class="stamp-right">LOCI: LDN Project © 2025</p>
+   LOCI: LDN Project © 2025
 </footer>
-<!-- Scripts -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
