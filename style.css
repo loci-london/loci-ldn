@@ -146,7 +146,7 @@ h1 {
 .menu-button {
   position: fixed;
   top: 6px;
-  right: 18px;
+  left: 16px;
   font-family: 'Courier New', monospace;
   font-size: 14px;
   background: #fff;
@@ -323,7 +323,7 @@ h1 {
  
 #shuffleBtn {
  position: absolute;
- top: 16px;
+ top: 4px;
  right: 16px;
  z-index: 999;
  font-family: 'Courier New', monospace;
