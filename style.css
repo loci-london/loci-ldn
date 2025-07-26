@@ -321,3 +321,22 @@ h1 {
 
 }
  
+#shuffleBtn {
+ position: absolute;
+ top: 16px;
+ right: 16px;
+ z-index: 999;
+ font-family: 'Courier New', monospace;
+ font-size: 14px;
+ background-color: white;
+ border: 1px dashed black;
+ padding: 6px 12px;
+ cursor: pointer;
+ letter-spacing: 0.5px;
+ text-transform: lowercase;
+ box-shadow: 2px 2px 0 black;
+ transition: transform 0.1s ease;
+}
+#shuffleBtn:hover {
+ transform: scale(1.05);
+}
