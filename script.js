@@ -33,6 +33,23 @@ const customIcon = L.icon({
  iconAnchor: [15, 30],
  popupAnchor: [0, -30]
 });
+function getEmbedHTML(songLink) {
+ let embedHTML = "";
+ if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
+   const videoId = songLink.includes("youtu.be")
+     ? songLink.split("youtu.be/")[1]
+     : songLink.split("v=")[1]?.split("&")[0];
+   if (videoId) {
+     embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+   }
+ } else if (songLink.includes("spotify.com")) {
+   const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
+   if (match) {
+     embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameborder="0" allow="encrypted-media"></iframe>`;
+   }
+ }
+ return embedHTML;
+}
 // Load existing markers
 db.collection("memories").get().then(snapshot => {
  snapshot.forEach(doc => {
@@ -131,3 +148,24 @@ document.addEventListener('click', () => {
  const overlay = document.getElementById('introOverlay');
  if (overlay) overlay.style.display = 'none';
 }, { once: true });
+document.getElementById('shuffleBtn').addEventListener('click', () => {
+ db.collection("memories").get().then(snapshot => {
+   const allDocs = snapshot.docs;
+   if (allDocs.length === 0) {
+     alert("no memories to shuffle yet!");
+     return;
+   }
+   const randomDoc = allDocs[Math.floor(Math.random() * allDocs.length)];
+   const data = randomDoc.data();
+   map.setView([data.lat, data.lng], 14);
+   const tempMarker = L.marker([data.lat, data.lng], { icon: customIcon })
+     .addTo(map)
+     .bindPopup(`<div style="font-family: 'Courier New'; font-size: 14px; max-width: 250px;">
+<p>${data.memory}</p>
+       ${getEmbedHTML(data.songLink)}
+</div>`)
+     .openPopup();
+   // Remove the marker after a few seconds so it doesn’t clutter
+   setTimeout(() => map.removeLayer(tempMarker), 5000);
+ });
+});
