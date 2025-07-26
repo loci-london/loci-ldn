@@ -16,6 +16,15 @@ const map = L.map('map').setView([51.5074, -0.1278], 12);
 db.collection("memories").get().then(snapshot => {
  snapshot.forEach(doc => {
    const data = doc.data();
+  // Rough polygon boundary for Greater London
+const greaterLondonBounds = L.polygon([
+ [51.7342, -0.5103],
+ [51.6747, 0.2156],
+ [51.3827, 0.1753],
+ [51.2871, -0.1911],
+ [51.3820, -0.4417],
+ [51.6472, -0.4727]
+]);
    createMarker(data.lat, data.lng, data.memory, data.songLink);
  });
 });
@@ -34,6 +43,25 @@ const customIcon = L.icon({
 map.on('click', function (e) {
  const lat = e.latlng.lat.toFixed(5);
  const lng = e.latlng.lng.toFixed(5);
+ // Only allow submissions inside Greater London
+ if (greaterLondonBounds.getBounds().contains([lat, lng])) {
+   const popupContent = `
+<div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
+<strong>Memory at this place:</strong><br>
+<textarea id="memory" rows="4" cols="30" placeholder="write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea>
+<input type="text" id="songLink" placeholder="Paste Spotify or YouTube link" style="width: 100%; margin-top: 6px; padding: 4px;">
+<br><br>
+<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 6px; background: #fff; border: 1px dotted #000; padding: 6px 12px; font-family: 'Courier New';">Add</button>
+</div>
+   `;
+   L.popup()
+     .setLatLng([lat, lng])
+     .setContent(popupContent)
+     .openOn(map);
+ } else {
+   alert("Sorry, this map only accepts locations within Greater London.");
+ }
+});
  const popupContent = `
 <div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
 <strong>Memory at this place:</strong><br>
