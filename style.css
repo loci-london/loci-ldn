@@ -127,12 +127,6 @@ h1 {
 }
 
 @media (max-width: 600px) {
-  .about-button {
-    font-size: 12px;
-    padding: 5px 8px;
-    top: 12px;
-    right: 12px;
-  }
 }
 .about-footer-box {
  position: fixed;
@@ -151,8 +145,8 @@ h1 {
 /* MENU STYLES */
 .menu-button {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 6px;
+  right: 18px;
   font-family: 'Courier New', monospace;
   font-size: 14px;
   background: #fff;
