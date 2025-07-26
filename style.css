@@ -160,7 +160,7 @@ h1 {
 .slide-menu {
   position: fixed;
   top: 60px;
-  right: 20px;
+  left: 20px;
   background: #fff;
   border: 1px dotted #000;
   padding: 12px 16px;
