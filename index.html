@@ -13,6 +13,15 @@
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<!-- ✶ Zine-style menu button -->
+<div class="menu-button" onclick="toggleMenu()">✶ menu</div>
+<!-- Slide-out menu -->
+<div id="slide-menu" class="slide-menu">
+<ul>
+<li><a href="about.html">about</a></li>
+<li><a href="privacy.html">privacy</a></li>
+</ul>
+</div>
 <div class="header">
 <h1>-- LOCI: LDN --</h1>
 <a href="about.html" class="about-button">ABOUT</a>
@@ -45,5 +54,22 @@
 <div id="help-box">
 <p>click anywhere on the map<br>leave a memory<br>add a song</p>
 </div>
+<!-- Menu toggle script -->
+<script>
+ function toggleMenu() {
+   document.getElementById("slide-menu").classList.toggle("open");
+ }
+ // Close menu when clicking outside it
+ window.addEventListener("click", function (e) {
+   const menu = document.getElementById("slide-menu");
+   const button = document.querySelector(".menu-button");
+   if (!menu.contains(e.target) && !button.contains(e.target)) {
+     menu.classList.remove("open");
+   }
+ });
+</script>
+<footer class="copyright-footer">
+<p>© 2025 mars / loci:ldn — all rights reserved</p>
+</footer>
 </body>
 </html>
