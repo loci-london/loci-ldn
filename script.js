@@ -11,12 +11,22 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// Map setup
+// Set up map
 const map = L.map('map').setView([51.5074, -0.1278], 12);
-db.collection("memories").get().then(snapshot => {
- snapshot.forEach(doc => {
-   const data = doc.data();
-  // Rough polygon boundary for Greater London
+// Add tile layer
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+ attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
+ subdomains: 'abcd',
+ maxZoom: 19
+}).addTo(map);
+// Custom icon
+const customIcon = L.icon({
+ iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
+ iconSize: [30, 30],
+ iconAnchor: [15, 30],
+ popupAnchor: [0, -30]
+});
+// Rough Greater London polygon (for click restriction)
 const greaterLondonBounds = L.polygon([
  [51.7342, -0.5103],
  [51.6747, 0.2156],
@@ -25,25 +35,17 @@ const greaterLondonBounds = L.polygon([
  [51.3820, -0.4417],
  [51.6472, -0.4727]
 ]);
+// Load existing markers
+db.collection("memories").get().then(snapshot => {
+ snapshot.forEach(doc => {
+   const data = doc.data();
    createMarker(data.lat, data.lng, data.memory, data.songLink);
  });
 });
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
- attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
- subdomains: 'abcd',
- maxZoom: 19
-}).addTo(map);
-// Starburst-style black icon
-const customIcon = L.icon({
- iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
- iconSize: [30, 30],
- iconAnchor: [15, 30],
- popupAnchor: [0, -30]
-});
+// Handle map click for adding new memory
 map.on('click', function (e) {
  const lat = e.latlng.lat.toFixed(5);
  const lng = e.latlng.lng.toFixed(5);
- // Only allow submissions inside Greater London
  if (greaterLondonBounds.getBounds().contains([lat, lng])) {
    const popupContent = `
 <div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
@@ -62,19 +64,7 @@ map.on('click', function (e) {
    alert("Sorry, this map only accepts locations within Greater London.");
  }
 });
- const popupContent = `
-<div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
-<strong>Memory at this place:</strong><br>
-<textarea id="memory" rows="4" cols="30" placeholder="Write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea><br>
-<input type="text" id="songLink" placeholder="Paste Spotify or YouTube link" style="width: 100%; margin-top: 6px; padding: 4px;"><br>
-<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 8px;">Add</button>
-</div>
-`;
- L.popup()
-   .setLatLng([lat, lng])
-   .setContent(popupContent)
-   .openOn(map);
-});
+// Add memory function
 function addMemory(lat, lng) {
  const memory = document.getElementById('memory').value;
  const songLink = document.getElementById('songLink').value;
@@ -89,9 +79,8 @@ function addMemory(lat, lng) {
    songLink
  }).then(() => {
    createMarker(lat, lng, memory, songLink);
-   // ✅ Close the popup
-   map.closePopup();
-   // ✅ Optional: show temporary confirmation
+   map.closePopup(); // Close the form popup
+   // Temporary ✓ Added! confirmation
    const confirmation = L.popup({
      closeButton: false,
      autoClose: true
@@ -106,6 +95,7 @@ function addMemory(lat, lng) {
    console.error("Error adding document: ", error);
  });
 }
+// Create marker with memory + embedded player
 function createMarker(lat, lng, memory, songLink) {
  let embedHTML = "";
  if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
@@ -131,7 +121,7 @@ function createMarker(lat, lng, memory, songLink) {
    .addTo(map)
    .bindPopup(finalPopup);
 }
-// Help toggle logic
+// Help box toggle
 document.addEventListener("DOMContentLoaded", function () {
  const helpButton = document.getElementById("help-button");
  const helpBox = document.getElementById("help-box");
@@ -139,14 +129,13 @@ document.addEventListener("DOMContentLoaded", function () {
    e.stopPropagation();
    helpBox.style.display = helpBox.style.display === "block" ? "none" : "block";
  });
- // Hide help box when clicking outside of it
  document.addEventListener("click", function (e) {
    if (!helpBox.contains(e.target) && e.target !== helpButton) {
      helpBox.style.display = "none";
    }
  });
 });
-// Dismiss intro overlay on first click
+// Hide intro overlay on first click
 document.addEventListener('click', () => {
  const overlay = document.getElementById('introOverlay');
  if (overlay) {
