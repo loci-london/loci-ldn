@@ -247,3 +247,77 @@ h1 {
  display: inline-block;
  box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
+.retro-popup {
+
+  font-family: 'Courier New', monospace;
+
+  font-size: 14px;
+
+  border: 2px solid #000;
+
+  background-color: #f5f5f5;
+
+  max-width: 250px;
+
+  box-shadow: 4px 4px 0 #000;
+
+}
+
+.retro-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  background: #ccc;
+
+  border-bottom: 2px solid #000;
+
+  padding: 4px 6px;
+
+}
+
+.retro-title {
+
+  font-weight: bold;
+
+}
+
+.retro-buttons {
+
+  display: flex;
+
+  gap: 4px;
+
+}
+
+.retro-buttons .btn {
+
+  width: 10px;
+
+  height: 10px;
+
+  background: #000;
+
+  border: 1px solid #000;
+
+}
+
+.retro-body {
+
+  padding: 6px;
+
+}
+
+.retro-body iframe {
+
+  width: 100%;
+
+  margin-top: 6px;
+
+  border: none;
+
+}
+ 
