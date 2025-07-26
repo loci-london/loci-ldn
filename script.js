@@ -101,8 +101,34 @@ function createMarker(lat, lng, memory, songLink) {
      ? songLink.split("youtu.be/")[1]
      : songLink.split("v=")[1]?.split("&")[0];
    if (videoId) {
-     embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+     embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
    }
+ } else if (songLink.includes("spotify.com")) {
+   const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
+   if (match) {
+     embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameborder="0" allow="encrypted-media"></iframe>`;
+   }
+ }
+ const finalPopup = `
+<div class="retro-popup">
+<div class="retro-header">
+<div class="retro-title">✶ Memory ✶</div>
+<div class="retro-buttons">
+<div class="btn close"></div>
+<div class="btn minimize"></div>
+<div class="btn maximize"></div>
+</div>
+</div>
+<div class="retro-body">
+<p>${memory}</p>
+       ${embedHTML}
+</div>
+</div>
+ `;
+ L.marker([lat, lng], { icon: customIcon })
+   .addTo(map)
+   .bindPopup(finalPopup);
+}
  } else if (songLink.includes("spotify.com")) {
    const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
    if (match) {
