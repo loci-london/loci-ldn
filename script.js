@@ -8,25 +8,11 @@ const firebaseConfig = {
  appId: "1:41724768309:web:44be011f074d75041cc17c",
  measurementId: "G-KZ3H3L6K2Y"
 };
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// Set up map
+// Initialize map
 const map = L.map('map').setView([51.5074, -0.1278], 12);
-// Add tile layer
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
- attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
- subdomains: 'abcd',
- maxZoom: 19
-}).addTo(map);
-// Custom icon
-const customIcon = L.icon({
- iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
- iconSize: [30, 30],
- iconAnchor: [15, 30],
- popupAnchor: [0, -30]
-});
-// Rough Greater London polygon (for click restriction)
+// Rough polygon boundary for Greater London
 const greaterLondonBounds = L.polygon([
  [51.7342, -0.5103],
  [51.6747, 0.2156],
@@ -35,17 +21,30 @@ const greaterLondonBounds = L.polygon([
  [51.3820, -0.4417],
  [51.6472, -0.4727]
 ]);
-// Load existing markers
+// Load tile layer
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+ attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
+ subdomains: 'abcd',
+ maxZoom: 19
+}).addTo(map);
+// Custom marker
+const customIcon = L.icon({
+ iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
+ iconSize: [30, 30],
+ iconAnchor: [15, 30],
+ popupAnchor: [0, -30]
+});
+// Load existing markers from Firestore
 db.collection("memories").get().then(snapshot => {
  snapshot.forEach(doc => {
    const data = doc.data();
    createMarker(data.lat, data.lng, data.memory, data.songLink);
  });
 });
-// Handle map click for adding new memory
+// On map click
 map.on('click', function (e) {
- const lat = e.latlng.lat.toFixed(5);
- const lng = e.latlng.lng.toFixed(5);
+ const lat = e.latlng.lat;
+ const lng = e.latlng.lng;
  if (greaterLondonBounds.getBounds().contains([lat, lng])) {
    const popupContent = `
 <div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
@@ -64,7 +63,7 @@ map.on('click', function (e) {
    alert("Sorry, this map only accepts locations within Greater London.");
  }
 });
-// Add memory function
+// Add memory to Firestore
 function addMemory(lat, lng) {
  const memory = document.getElementById('memory').value;
  const songLink = document.getElementById('songLink').value;
@@ -73,14 +72,13 @@ function addMemory(lat, lng) {
    return;
  }
  db.collection("memories").add({
-   lat,
-   lng,
+   lat: Number(lat.toFixed(5)),
+   lng: Number(lng.toFixed(5)),
    memory,
    songLink
  }).then(() => {
    createMarker(lat, lng, memory, songLink);
-   map.closePopup(); // Close the form popup
-   // Temporary ✓ Added! confirmation
+   map.closePopup();
    const confirmation = L.popup({
      closeButton: false,
      autoClose: true
@@ -95,7 +93,7 @@ function addMemory(lat, lng) {
    console.error("Error adding document: ", error);
  });
 }
-// Create marker with memory + embedded player
+// Marker with embedded song/media
 function createMarker(lat, lng, memory, songLink) {
  let embedHTML = "";
  if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
@@ -121,7 +119,7 @@ function createMarker(lat, lng, memory, songLink) {
    .addTo(map)
    .bindPopup(finalPopup);
 }
-// Help box toggle
+// Help toggle
 document.addEventListener("DOMContentLoaded", function () {
  const helpButton = document.getElementById("help-button");
  const helpBox = document.getElementById("help-box");
@@ -135,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
    }
  });
 });
-// Hide intro overlay on first click
+// Dismiss intro overlay on first click
 document.addEventListener('click', () => {
  const overlay = document.getElementById('introOverlay');
  if (overlay) {
