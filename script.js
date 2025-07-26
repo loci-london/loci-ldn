@@ -1,4 +1,4 @@
-// Firebase config
+// Initialize Firebase
 const firebaseConfig = {
  apiKey: "AIzaSyANy4eUYrkCg-WIKd8aYbDehoxLXeWo8w",
  authDomain: "loci-ldn.firebaseapp.com",
@@ -8,24 +8,11 @@ const firebaseConfig = {
  appId: "1:41724768309:web:44be011f074d75041cc17c",
  measurementId: "G-KZ3H3L6K2Y"
 };
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// Setup map
+// Map setup
 const map = L.map('map').setView([51.5074, -0.1278], 12);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
- attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
- subdomains: 'abcd',
- maxZoom: 19
-}).addTo(map);
-// Starburst icon
-const customIcon = L.icon({
- iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
- iconSize: [30, 30],
- iconAnchor: [15, 30],
- popupAnchor: [0, -30]
-});
-// Rough Greater London polygon boundary
+// Greater London boundary (rough polygon)
 const greaterLondonBounds = L.polygon([
  [51.7342, -0.5103],
  [51.6747, 0.2156],
@@ -34,6 +21,18 @@ const greaterLondonBounds = L.polygon([
  [51.3820, -0.4417],
  [51.6472, -0.4727]
 ]);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+ attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>, OpenStreetMap contributors',
+ subdomains: 'abcd',
+ maxZoom: 19
+}).addTo(map);
+// Custom star icon
+const customIcon = L.icon({
+ iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
+ iconSize: [30, 30],
+ iconAnchor: [15, 30],
+ popupAnchor: [0, -30]
+});
 // Load existing markers
 db.collection("memories").get().then(snapshot => {
  snapshot.forEach(doc => {
@@ -41,12 +40,12 @@ db.collection("memories").get().then(snapshot => {
    createMarker(data.lat, data.lng, data.memory, data.songLink);
  });
 });
-// Map click handler
+// Map click
 map.on('click', function (e) {
- const lat = e.latlng.lat.toFixed(5);
- const lng = e.latlng.lng.toFixed(5);
+ const lat = e.latlng.lat;
+ const lng = e.latlng.lng;
  if (greaterLondonBounds.getBounds().contains([lat, lng])) {
-   const popupContent = \`
+   const popupContent = `
 <div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
 <strong>Memory at this place:</strong><br>
 <textarea id="memory" rows="4" cols="30" placeholder="write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea>
@@ -54,16 +53,13 @@ map.on('click', function (e) {
 <br><br>
 <button onclick="addMemory(${lat}, ${lng})" style="margin-top: 6px; background: #fff; border: 1px dotted #000; padding: 6px 12px; font-family: 'Courier New';">Add</button>
 </div>
-   \`;
-   L.popup()
-     .setLatLng([lat, lng])
-     .setContent(popupContent)
-     .openOn(map);
+   `;
+   L.popup().setLatLng([lat, lng]).setContent(popupContent).openOn(map);
  } else {
    alert("Sorry, this map only accepts locations within Greater London.");
  }
 });
-// Add memory to Firestore
+// Add memory
 function addMemory(lat, lng) {
  const memory = document.getElementById('memory').value;
  const songLink = document.getElementById('songLink').value;
@@ -71,21 +67,21 @@ function addMemory(lat, lng) {
    alert("Please write a memory before submitting.");
    return;
  }
- db.collection("memories").add({ lat, lng, memory, songLink })
-   .then(() => {
-     createMarker(lat, lng, memory, songLink);
+ db.collection("memories").add({ lat, lng, memory, songLink }).then(() => {
+   createMarker(lat, lng, memory, songLink);
+   map.closePopup();
+   const confirmation = L.popup({ closeButton: false, autoClose: true })
+     .setLatLng([lat, lng])
+     .setContent("<strong>✓ Added!</strong>")
+     .openOn(map);
+   setTimeout(() => {
      map.closePopup();
-     const confirmation = L.popup({ closeButton: false, autoClose: true })
-       .setLatLng([lat, lng])
-       .setContent("<strong>âœ“ Added!</strong>")
-       .openOn(map);
-     setTimeout(() => { map.closePopup(); }, 1500);
-   })
-   .catch((error) => {
-     console.error("Error adding document: ", error);
-   });
+   }, 1500);
+ }).catch((error) => {
+   console.error("Error adding document: ", error);
+ });
 }
-// Create marker with embedded song if present
+// Create styled marker and embed player
 function createMarker(lat, lng, memory, songLink) {
  let embedHTML = "";
  if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
@@ -93,29 +89,30 @@ function createMarker(lat, lng, memory, songLink) {
      ? songLink.split("youtu.be/")[1]
      : songLink.split("v=")[1]?.split("&")[0];
    if (videoId) {
-     embedHTML = \`
+     embedHTML = `
+<div style="border: 1px dotted #222; padding: 6px; background: #fff; margin-top: 6px;">
 <iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-     \`;
+</div>`;
    }
  } else if (songLink.includes("spotify.com")) {
    const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
    if (match) {
-     embedHTML = \`
+     embedHTML = `
+<div style="border: 1px dotted #222; padding: 6px; background: #fff; margin-top: 6px;">
 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameborder="0" allow="encrypted-media"></iframe>
-     \`;
+</div>`;
    }
  }
- const finalPopup = \`
+ const finalPopup = `
 <div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px;">
-<p>\${memory}</p>
-     \${embedHTML}
-</div>
- \`;
+<p>${memory}</p>
+     ${embedHTML}
+</div>`;
  L.marker([lat, lng], { icon: customIcon })
    .addTo(map)
    .bindPopup(finalPopup);
 }
-// Help toggle logic
+// Help box toggle
 document.addEventListener("DOMContentLoaded", function () {
  const helpButton = document.getElementById("help-button");
  const helpBox = document.getElementById("help-box");
@@ -132,7 +129,5 @@ document.addEventListener("DOMContentLoaded", function () {
 // Dismiss intro overlay
 document.addEventListener('click', () => {
  const overlay = document.getElementById('introOverlay');
- if (overlay) {
-   overlay.style.display = 'none';
- }
+ if (overlay) overlay.style.display = 'none';
 }, { once: true });
