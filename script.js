@@ -135,12 +135,6 @@ function createMarker(lat, lng, memory, songLink) {
      embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameborder="0" allow="encrypted-media"></iframe>`;
    }
  }
- const finalPopup = `
-<div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px;">
-<p>${memory}</p>
-     ${embedHTML}
-</div>
- `;
  L.marker([lat, lng], { icon: customIcon })
    .addTo(map)
    .bindPopup(finalPopup);
