@@ -76,15 +76,35 @@ map.on('click', function (e) {
    .openOn(map);
 });
 function addMemory(lat, lng) {
- const memory = document.getElementById("memory").value;
- const songLink = document.getElementById("songLink").value;
+ const memory = document.getElementById('memory').value;
+ const songLink = document.getElementById('songLink').value;
+ if (!memory) {
+   alert("Please write a memory before submitting.");
+   return;
+ }
  db.collection("memories").add({
    lat,
    lng,
    memory,
    songLink
+ }).then(() => {
+   createMarker(lat, lng, memory, songLink);
+   // ✅ Close the popup
+   map.closePopup();
+   // ✅ Optional: show temporary confirmation
+   const confirmation = L.popup({
+     closeButton: false,
+     autoClose: true
+   })
+     .setLatLng([lat, lng])
+     .setContent("<strong>✓ Added!</strong>")
+     .openOn(map);
+   setTimeout(() => {
+     map.closePopup();
+   }, 1500);
+ }).catch((error) => {
+   console.error("Error adding document: ", error);
  });
- createMarker(lat, lng, memory, songLink);
 }
 function createMarker(lat, lng, memory, songLink) {
  let embedHTML = "";
