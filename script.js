@@ -71,8 +71,6 @@ src="https://embed.music.apple.com/us/song/${songId}"></iframe>`;
 return embedHTML;
 }
 
- return embedHTML;
-}
 // Load existing markers
 db.collection("memories").get().then(snapshot => {
  snapshot.forEach(doc => {
