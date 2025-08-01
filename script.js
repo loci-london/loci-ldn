@@ -34,20 +34,43 @@ const customIcon = L.icon({
  popupAnchor: [0, -30]
 });
 function getEmbedHTML(songLink) {
- let embedHTML = "";
- if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
-   const videoId = songLink.includes("youtu.be")
-     ? songLink.split("youtu.be/")[1]
-     : songLink.split("v=")[1]?.split("&")[0];
-   if (videoId) {
-     embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-   }
- } else if (songLink.includes("spotify.com")) {
-   const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
-   if (match) {
-     embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameborder="0" allow="encrypted-media"></iframe>`;
-   }
- }
+if (!songLink) return "";
+
+let embedHTML = "";
+
+// YouTube (still supported)
+if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
+const videoId = songLink.includes("youtu.be")
+? songLink.split("youtu.be/")[1].split("?")[0]
+: new URL(songLink).searchParams.get("v");
+embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+
+// Spotify
+} else if (songLink.includes("spotify.com")) {
+const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
+if (match) {
+embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+}
+
+// SoundCloud
+} else if (songLink.includes("soundcloud.com")) {
+embedHTML = `<iframe width="100%" height="166" scrolling="no" frameborder="no"
+src="https://w.soundcloud.com/player/?url=${encodeURIComponent(songLink)}&color=%230066cc&inverse=false&auto_play=false&show_user=true"></iframe>`;
+
+// Apple Music
+} else if (songLink.includes("music.apple.com")) {
+const parts = songLink.split("/id");
+const songId = parts[1]?.split("?")[0];
+if (songId) {
+embedHTML = `<iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="150" style="width:100%;max-width:660px;overflow:hidden;background:transparent;"
+sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+src="https://embed.music.apple.com/us/song/${songId}"></iframe>`;
+}
+}
+
+return embedHTML;
+}
+
  return embedHTML;
 }
 // Load existing markers
