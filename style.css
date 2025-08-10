@@ -340,3 +340,19 @@ h1 {
 #shuffleBtn:hover {
  transform: scale(1.05);
 }
+/* Zine-style Leaflet popup reset */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+}
+.leaflet-popup-content-wrapper {
+  border: 1px dotted #222;
+  padding: 8px 10px;
+}
+.leaflet-popup-content {
+  margin: 6px 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+.leaflet-popup-tip { display: none; } /* removes balloon pointer */
