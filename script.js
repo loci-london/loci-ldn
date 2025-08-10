@@ -30,53 +30,72 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// Custom star icon
+// Custom star icon (smaller, like before)
 const customIcon = L.icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
-  iconSize: [30, 30],
-  iconAnchor: [15, 30],
-  popupAnchor: [0, -30]
+  iconSize: [24, 24],
+  iconAnchor: [12, 24],
+  popupAnchor: [0, -22]
 });
 
-// Embed generator
+// ---------- EMBED HELPER ----------
+// Returns HTML for YouTube / Spotify / SoundCloud / Apple Music
 function getEmbedHTML(songLink) {
   if (!songLink) return "";
 
   let embedHTML = "";
 
-  // YouTube
+  // YOUTUBE
   if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
     const videoId = songLink.includes("youtu.be")
-      ? songLink.split("youtu.be/")[1].split("?")[0]
+      ? songLink.split("youtu.be/")[1].split(/[?&]/)[0]
       : new URL(songLink).searchParams.get("v");
-    embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    if (videoId) {
+      embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    }
 
-  // Spotify
+  // SPOTIFY (track)
   } else if (songLink.includes("spotify.com")) {
     const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
     if (match) {
-      embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+      embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
     }
 
-  // SoundCloud
+  // SOUNDCLOUD
   } else if (songLink.includes("soundcloud.com")) {
     embedHTML = `<iframe width="100%" height="166" scrolling="no" frameborder="no"
       src="https://w.soundcloud.com/player/?url=${encodeURIComponent(songLink)}&color=%230066cc&inverse=false&auto_play=false&show_user=true"></iframe>`;
 
-  // Apple Music
+  // APPLE MUSIC (song — supports /song/id####, album?i=####, and /track/####)
   } else if (songLink.includes("music.apple.com")) {
-    const songIdMatch = songLink.match(/\/id(\d+)/);
-    if (songIdMatch && songIdMatch[1]) {
+    const url = new URL(songLink);
+    const region = url.pathname.split('/')[1] || 'us';
+
+    let songId = url.searchParams.get('i'); // album links ?i=
+    if (!songId) {
+      const m1 = url.pathname.match(/\/song\/id(\d+)/);
+      if (m1) songId = m1[1];
+    }
+    if (!songId) {
+      const m2 = url.pathname.match(/\/(song|track)\/(\d+)/);
+      if (m2) songId = m2[2];
+    }
+    if (!songId) {
+      const m3 = songLink.match(/(\d{8,})/);
+      if (m3) songId = m3[1];
+    }
+
+    if (songId) {
       embedHTML = `<iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="150" style="width:100%;max-width:660px;overflow:hidden;background:transparent;"
         sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-        src="https://embed.music.apple.com/us/song/${songIdMatch[1]}"></iframe>`;
+        src="https://embed.music.apple.com/${region}/song/${songId}"></iframe>`;
     }
   }
 
   return embedHTML;
 }
 
-// Load existing markers
+// ---------- LOAD EXISTING MARKERS ----------
 db.collection("memories").get().then(snapshot => {
   snapshot.forEach(doc => {
     const data = doc.data();
@@ -84,7 +103,7 @@ db.collection("memories").get().then(snapshot => {
   });
 });
 
-// Map click
+// ---------- ON MAP CLICK ----------
 map.on('click', function (e) {
   const lat = e.latlng.lat;
   const lng = e.latlng.lng;
@@ -93,8 +112,8 @@ map.on('click', function (e) {
     const popupContent = `
       <div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
         <strong>Memory at this place:</strong><br>
-        <textarea id="memory" rows="4" cols="30" placeholder="Write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea>
-        <input type="text" id="songLink" placeholder="Paste YouTube, Spotify, SoundCloud or Apple Music link" style="width: 100%; margin-top: 6px; padding: 4px;">
+        <textarea id="memory" rows="4" cols="30" placeholder="write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea>
+        <input type="text" id="songLink" placeholder="Paste YouTube, Spotify, SoundCloud, or Apple Music link" style="width: 100%; margin-top: 6px; padding: 4px;">
         <br><br>
         <button onclick="addMemory(${lat}, ${lng})" style="margin-top: 6px; background: #fff; border: 1px dotted #000; padding: 6px 12px; font-family: 'Courier New';">Add</button>
       </div>
@@ -105,13 +124,14 @@ map.on('click', function (e) {
   }
 });
 
-// Add memory
+// ---------- ADD MEMORY ----------
 function addMemory(lat, lng) {
   const memory = document.getElementById('memory').value.trim();
   const songLink = document.getElementById('songLink').value.trim();
 
+  // REQUIRE BOTH memory and song
   if (!memory || !songLink) {
-    alert("Please enter both a memory and a song link before submitting.");
+    alert("Please add a memory and a track link before submitting.");
     return;
   }
 
@@ -132,61 +152,73 @@ function addMemory(lat, lng) {
   });
 }
 
-// Create styled marker and embed player
+// ---------- CREATE MARKER + POPUP ----------
 function createMarker(lat, lng, memory, songLink) {
   const embedHTML = getEmbedHTML(songLink);
 
   const finalPopup = `
-    <div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px;">
-      <p>${memory}</p>
+    <div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 260px;">
+      <p style="margin: 0 0 8px 0;">${memory}</p>
       ${embedHTML}
-    </div>`;
+    </div>
+  `;
+
   L.marker([lat, lng], { icon: customIcon })
     .addTo(map)
     .bindPopup(finalPopup);
 }
 
-// Help box toggle
+// ---------- HELP BOX ----------
 document.addEventListener("DOMContentLoaded", function () {
   const helpButton = document.getElementById("help-button");
   const helpBox = document.getElementById("help-box");
 
-  helpButton.addEventListener("click", function (e) {
-    e.stopPropagation();
-    helpBox.style.display = helpBox.style.display === "block" ? "none" : "block";
-  });
+  if (helpButton && helpBox) {
+    helpButton.addEventListener("click", function (e) {
+      e.stopPropagation();
+      helpBox.style.display = helpBox.style.display === "block" ? "none" : "block";
+    });
 
-  document.addEventListener("click", function (e) {
-    if (!helpBox.contains(e.target) && e.target !== helpButton) {
-      helpBox.style.display = "none";
-    }
-  });
+    document.addEventListener("click", function (e) {
+      if (!helpBox.contains(e.target) && e.target !== helpButton) {
+        helpBox.style.display = "none";
+      }
+    });
+  }
 });
 
-// Dismiss intro overlay
+// ---------- DISMISS INTRO OVERLAY ----------
 document.addEventListener('click', () => {
   const overlay = document.getElementById('introOverlay');
   if (overlay) overlay.style.display = 'none';
 }, { once: true });
 
-// Shuffle button logic
-document.getElementById('shuffleBtn').addEventListener('click', () => {
-  db.collection("memories").get().then(snapshot => {
-    const allDocs = snapshot.docs;
-    if (allDocs.length === 0) {
-      alert("No memories to shuffle yet!");
-      return;
-    }
-    const randomDoc = allDocs[Math.floor(Math.random() * allDocs.length)];
-    const data = randomDoc.data();
-    map.setView([data.lat, data.lng], 14);
-    const tempMarker = L.marker([data.lat, data.lng], { icon: customIcon })
-      .addTo(map)
-      .bindPopup(`<div style="font-family: 'Courier New'; font-size: 14px; max-width: 250px;">
-        <p>${data.memory}</p>
-        ${getEmbedHTML(data.songLink)}
-      </div>`)
-      .openPopup();
-    setTimeout(() => map.removeLayer(tempMarker), 5000);
+// ---------- SHUFFLE / SPIN ----------
+const shuffleEl = document.getElementById('shuffleBtn');
+if (shuffleEl) {
+  shuffleEl.addEventListener('click', () => {
+    db.collection("memories").get().then(snapshot => {
+      const allDocs = snapshot.docs;
+      if (allDocs.length === 0) {
+        alert("no memories to shuffle yet!");
+        return;
+      }
+      const randomDoc = allDocs[Math.floor(Math.random() * allDocs.length)];
+      const data = randomDoc.data();
+
+      map.setView([data.lat, data.lng], 14);
+
+      const tempMarker = L.marker([data.lat, data.lng], { icon: customIcon })
+        .addTo(map)
+        .bindPopup(`
+          <div style="font-family: 'Courier New'; font-size: 14px; max-width: 260px;">
+            <p style="margin:0 0 8px 0;">${data.memory}</p>
+            ${getEmbedHTML(data.songLink)}
+          </div>
+        `)
+        .openPopup();
+
+      setTimeout(() => map.removeLayer(tempMarker), 5000);
+    });
   });
-});
+}
