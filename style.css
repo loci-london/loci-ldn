@@ -340,19 +340,47 @@ h1 {
 #shuffleBtn:hover {
  transform: scale(1.05);
 }
-/* Zine-style Leaflet popup reset */
-.leaflet-popup-content-wrapper, .leaflet-popup-tip {
-  background: #fff;
-  border-radius: 0;
-  box-shadow: none;
+/* --- Zine-style popup (compact, dashed, rounded) --- */
+.zine-popup {
+  max-width: 260px !important;           /* keep it compact like before */
 }
-.leaflet-popup-content-wrapper {
-  border: 1px dotted #222;
-  padding: 8px 10px;
+
+/* Wrapper styling: dashed border, rounded corners, no drop shadow */
+.zine-popup .leaflet-popup-content-wrapper,
+.zine-popup .leaflet-popup-tip {
+  background: #fff !important;
+  border: 1px dashed #222 !important;    /* dashed border */
+  border-radius: 10px !important;         /* curved edges */
+  box-shadow: none !important;
 }
-.leaflet-popup-content {
-  margin: 6px 8px;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
+
+/* Inner content spacing */
+.zine-popup .leaflet-popup-content-wrapper {
+  padding: 10px 12px !important;
 }
-.leaflet-popup-tip { display: none; } /* removes balloon pointer */
+
+/* Remove the pointer/balloon tail */
+.zine-popup .leaflet-popup-tip-container {
+  display: none !important;
+}
+
+/* Tight content, original type */
+.zine-popup .leaflet-popup-content {
+  margin: 0 !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
+
+/* Keep embeds small so they don't blow up the popup */
+.zine-popup iframe {
+  max-width: 230px !important;            /* match your embed size */
+  width: 230px !important;                /* enforce width */
+  border: 0 !important;
+}
+
+/* Optional: clean close button position */
+.leaflet-container a.leaflet-popup-close-button {
+  top: 6px !important;
+  right: 8px !important;
+}
