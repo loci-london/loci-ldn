@@ -38,56 +38,34 @@ iconAnchor: [15, 30],
 popupAnchor: [0, -30]
 });
 
-// Embed generator
+// Embed generator (forces proper embed domain)
 function getEmbedHTML(songLink) {
 if (!songLink) return "";
 
 let embedHTML = "";
 
-// YouTube
+// --- YouTube ---
 if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
 const videoId = songLink.includes("youtu.be")
 ? songLink.split("youtu.be/")[1].split("?")[0]
 : new URL(songLink).searchParams.get("v");
-embedHTML = `
-<iframe width="230" height="130"
-src="https://www.youtube.com/embed/${videoId}"
-frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-allowfullscreen>
-</iframe>`;
+embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
 
-// Spotify
+// --- Spotify ---
 } else if (songLink.includes("spotify.com")) {
-const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
-if (match) {
-embedHTML = `
-<iframe style="border-radius:12px"
-src="https://open.spotify.com/embed/track/${match[1]}?utm_source=generator"
-width="230" height="80" frameborder="0"
-allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
-</iframe>`;
-}
+let embedLink = songLink.replace("open.spotify.com/", "open.spotify.com/embed/");
+embedHTML = `<iframe style="border-radius:12px" src="${embedLink}" width="230" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
 
-// SoundCloud
+// --- SoundCloud ---
 } else if (songLink.includes("soundcloud.com")) {
-embedHTML = `
-<iframe width="230" height="120"
-scrolling="no" frameborder="no" allow="autoplay"
-src="https://w.soundcloud.com/player/?url=${encodeURIComponent(songLink)}&color=%230066cc&inverse=false&auto_play=false&show_user=true">
-</iframe>`;
+embedHTML = `<iframe width="230" height="130" scrolling="no" frameborder="no"
+src="https://w.soundcloud.com/player/?url=${encodeURIComponent(songLink)}&color=%230066cc&inverse=false&auto_play=false&show_user=true"></iframe>`;
 
-// Apple Music
+// --- Apple Music ---
 } else if (songLink.includes("music.apple.com")) {
-const path = songLink.split("music.apple.com/")[1];
-if (path) {
-embedHTML = `
-<iframe allow="autoplay *; encrypted-media *;"
-frameborder="0" height="150"
-style="width:230px; border-radius:12px; overflow:hidden; background:transparent;"
-sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-src="https://embed.music.apple.com/${path}">
-</iframe>`;
-}
+let embedLink = songLink.replace("music.apple.com", "embed.music.apple.com");
+embedHTML = `<iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="150" style="width:230px; border-radius:12px; overflow:hidden; background:transparent;"
+sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" src="${embedLink}"></iframe>`;
 }
 
 return embedHTML;
@@ -108,12 +86,12 @@ const lng = e.latlng.lng;
 
 if (greaterLondonBounds.getBounds().contains([lat, lng])) {
 const popupContent = `
-<div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px;">
+<div style="width: 260px; max-width: 90vw; font-family: 'Courier New', monospace; font-size: 14px; border: 1px dashed #000; border-radius: 8px; padding: 8px; background: #fff;">
 <strong>Memory at this place:</strong><br>
 <textarea id="memory" rows="4" cols="30" placeholder="write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea>
 <input type="text" id="songLink" placeholder="Paste YouTube, Spotify, SoundCloud or Apple Music link" style="width: 100%; margin-top: 6px; padding: 4px;">
 <br><br>
-<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 6px; background: #fff; border: 1px dashed #000; border-radius: 8px; padding: 6px 12px; font-family: 'Courier New';">Add</button>
+<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 6px; background: #fff; border: 1px dashed #000; padding: 6px 12px; border-radius: 6px; font-family: 'Courier New';">Add</button>
 </div>
 `;
 L.popup().setLatLng([lat, lng]).setContent(popupContent).openOn(map);
@@ -128,7 +106,7 @@ const memory = document.getElementById('memory').value;
 const songLink = document.getElementById('songLink').value;
 
 if (!memory || !songLink) {
-alert("Please write a memory AND add a song before submitting.");
+alert("Please write a memory and add a song before submitting.");
 return;
 }
 
@@ -154,7 +132,7 @@ function createMarker(lat, lng, memory, songLink) {
 const embedHTML = getEmbedHTML(songLink);
 
 const finalPopup = `
-<div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px; border: 1px dashed #222; border-radius: 10px; padding: 6px; background: #fff;">
+<div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px;">
 <p>${memory}</p>
 ${embedHTML}
 </div>`;
@@ -199,7 +177,7 @@ const data = randomDoc.data();
 map.setView([data.lat, data.lng], 14);
 const tempMarker = L.marker([data.lat, data.lng], { icon: customIcon })
 .addTo(map)
-.bindPopup(`<div style="font-family: 'Courier New'; font-size: 14px; max-width: 250px; border: 1px dashed #222; border-radius: 10px; padding: 6px; background: #fff;">
+.bindPopup(`<div style="font-family: 'Courier New'; font-size: 14px; max-width: 250px;">
 <p>${data.memory}</p>
 ${getEmbedHTML(data.songLink)}
 </div>`)
