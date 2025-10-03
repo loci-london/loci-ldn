@@ -185,3 +185,22 @@ ${getEmbedHTML(data.songLink)}
 setTimeout(() => map.removeLayer(tempMarker), 5000);
 });
 });
+
+db.collection("memories").get().then(snapshot => {
+snapshot.forEach(doc => {
+let data = doc.data();
+let updatedLink = data.songLink;
+
+if (updatedLink.includes("spotify.com") && !updatedLink.includes("/embed/")) {
+updatedLink = updatedLink.replace("open.spotify.com/", "open.spotify.com/embed/");
+}
+
+if (updatedLink.includes("music.apple.com") && !updatedLink.includes("embed.music.apple.com")) {
+updatedLink = updatedLink.replace("music.apple.com", "embed.music.apple.com");
+}
+
+if (updatedLink !== data.songLink) {
+db.collection("memories").doc(doc.id).update({ songLink: updatedLink });
+}
+});
+});
