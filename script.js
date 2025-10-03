@@ -38,7 +38,7 @@ iconAnchor: [15, 30],
 popupAnchor: [0, -30]
 });
 
-// Embed generator (fixed for 30s preview)
+// Embed generator
 function getEmbedHTML(songLink) {
 if (!songLink) return "";
 
@@ -49,13 +49,13 @@ if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
 const videoId = songLink.includes("youtu.be")
 ? songLink.split("youtu.be/")[1].split("?")[0]
 : new URL(songLink).searchParams.get("v");
-embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
 
-// Spotify (always playable preview)
+// Spotify
 } else if (songLink.includes("spotify.com")) {
 const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
 if (match) {
-embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}?utm_source=generator" width="230" height="80" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
+embedHTML = `<iframe src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>`;
 }
 
 // SoundCloud
@@ -63,15 +63,11 @@ embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/em
 embedHTML = `<iframe width="100%" height="166" scrolling="no" frameborder="no"
 src="https://w.soundcloud.com/player/?url=${encodeURIComponent(songLink)}&color=%230066cc&inverse=false&auto_play=false&show_user=true"></iframe>`;
 
-// Apple Music (official 30s preview)
+// Apple Music
 } else if (songLink.includes("music.apple.com")) {
-const parts = songLink.split("/id");
-const songId = parts[1]?.split("?")[0];
-if (songId) {
 embedHTML = `<iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="150" style="width:100%;max-width:660px;overflow:hidden;background:transparent;"
 sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-src="https://embed.music.apple.com/us/song/${songId}"></iframe>`;
-}
+src="${songLink.replace('music.apple.com', 'embed.music.apple.com')}"></iframe>`;
 }
 
 return embedHTML;
@@ -96,8 +92,9 @@ const popupContent = `
 <strong>Memory at this place:</strong><br>
 <textarea id="memory" rows="4" cols="30" placeholder="write your memory..." style="width: 100%; margin-top: 6px; padding: 4px;"></textarea>
 <input type="text" id="songLink" placeholder="Paste YouTube, Spotify, SoundCloud or Apple Music link" style="width: 100%; margin-top: 6px; padding: 4px;">
+
 <br><br>
-<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 6px; background: #fff; border: 1px dashed #000; border-radius:8px; padding: 6px 12px; font-family: 'Courier New';">Add</button>
+<button onclick="addMemory(${lat}, ${lng})" style="margin-top: 6px; background: #fff; border: 1px dotted #000; padding: 6px 12px; font-family: 'Courier New';">Add</button>
 </div>
 `;
 L.popup().setLatLng([lat, lng]).setContent(popupContent).openOn(map);
@@ -111,8 +108,8 @@ function addMemory(lat, lng) {
 const memory = document.getElementById('memory').value;
 const songLink = document.getElementById('songLink').value;
 
-if (!memory || !songLink) {
-alert("Please write a memory AND paste a song link before submitting.");
+if (!memory) {
+alert("Please write a memory before submitting.");
 return;
 }
 
