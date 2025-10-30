@@ -33,7 +33,7 @@ const customIcon = L.icon({
  iconAnchor: [15, 30],
  popupAnchor: [0, -30]
 });
-// --- Embed generator (fixed Spotify + Apple Music for UK) ---
+// --- Embed generator (improved for playable Spotify & Apple Music) ---
 function getEmbedHTML(songLink) {
  if (!songLink) return "";
  let embedHTML = "";
@@ -43,22 +43,31 @@ function getEmbedHTML(songLink) {
      ? songLink.split("youtu.be/")[1].split("?")[0]
      : new URL(songLink).searchParams.get("v");
    embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
- // --- Spotify ---
+ // --- Spotify (playable embed fix) ---
  } else if (songLink.includes("spotify.com")) {
    const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
    if (match) {
      const trackId = match[1];
-     embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${trackId}" width="230" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>`;
+     embedHTML = `
+<iframe style="border-radius:12px"
+         src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0"
+         width="230" height="80" frameBorder="0"
+         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+</iframe>`;
    }
  // --- SoundCloud ---
  } else if (songLink.includes("soundcloud.com")) {
    embedHTML = `<iframe width="230" height="130" scrolling="no" frameborder="no"
      src="https://w.soundcloud.com/player/?url=${encodeURIComponent(songLink)}&color=%230066cc&inverse=false&auto_play=false&show_user=true"></iframe>`;
- // --- Apple Music (UK embeds) ---
+ // --- Apple Music (playable UK embed) ---
  } else if (songLink.includes("music.apple.com")) {
    let embedLink = songLink.replace("music.apple.com", "embed.music.apple.com/gb");
-   embedHTML = `<iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="150" style="width:230px; border-radius:12px; overflow:hidden; background:transparent;"
-     sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" src="${embedLink}"></iframe>`;
+   embedHTML = `
+<iframe allow="autoplay *; encrypted-media *;" frameborder="0" height="150"
+       style="width:230px; border-radius:12px; overflow:hidden; background:transparent;"
+       sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+       src="${embedLink}">
+</iframe>`;
  }
  return embedHTML;
 }
@@ -112,7 +121,7 @@ function addMemory(lat, lng) {
 function createMarker(lat, lng, memory, songLink) {
  const embedHTML = getEmbedHTML(songLink);
  const finalPopup = `
-<div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px;">
+<div style="font-family: 'Courier New', monospace; font-size: 14px; max-width: 250px; border: 1px dashed #000; border-radius: 10px; padding: 6px; background: #fff;">
 <p>${memory}</p>
      ${embedHTML}
 </div>`;
