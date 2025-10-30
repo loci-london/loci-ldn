@@ -72,17 +72,13 @@ embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed
 } else if (songLink.includes("spotify.com")) {
    const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
    if (match) {
-       embedHTML = `
-<iframe
+       embedHTML = `<iframe
            src="https://open.spotify.com/embed/track/${match[1]}"
-           width="100%"
-           height="380"
-           style="border-radius:12px; overflow:hidden;"
+           width="100%" height="80" style="border-radius:12px; max-width:230px; overflow:hidden;"
            frameborder="0"
            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
 </iframe>`;
    }
-}
 
 // SoundCloud
 } else if (songLink.includes("soundcloud.com")) {
