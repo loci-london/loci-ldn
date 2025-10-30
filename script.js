@@ -74,7 +74,7 @@ embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed
    if (match) {
        embedHTML = `<iframe style="border-radius:12px"
            src="https://open.spotify.com/embed/track/${match[1]}"
-           width="230" height="152" frameborder="0"
+           width="230" height="80" frameborder="0"
            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
 </iframe>`;
    }
