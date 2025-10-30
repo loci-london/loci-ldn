@@ -570,3 +570,8 @@ h1 {
 
 }
  
+/* Fix rogue background box behind popups */
+.leaflet-popup-content-wrapper {
+ background: none !important;
+ box-shadow: none !important;
+}
