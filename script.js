@@ -70,10 +70,14 @@ embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed
 
 // Spotify
 } else if (songLink.includes("spotify.com")) {
-const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
-if (match) {
-embedHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${match[1]}" width="230" height="80" frameBorder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
-}
+   const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
+   if (match) {
+       embedHTML = `<iframe style="border-radius:12px"
+           src="https://open.spotify.com/embed/track/${match[1]}"
+           width="230" height="152" frameborder="0"
+           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+</iframe>`;
+   }
 
 // SoundCloud
 } else if (songLink.includes("soundcloud.com")) {
