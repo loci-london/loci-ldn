@@ -72,9 +72,10 @@ embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed
 } else if (songLink.includes("spotify.com")) {
    const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
    if (match) {
-       embedHTML = `<iframe style="border-radius:12px"
+       embedHTML = `<iframe
            src="https://open.spotify.com/embed/track/${match[1]}"
-           width="230" height="80" frameborder="0"
+           width="100%" height="80" style="border-radius:12px; max-width:230px; overflow:hidden;"
+           frameborder="0"
            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
 </iframe>`;
    }
