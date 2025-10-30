@@ -37,11 +37,28 @@ iconSize: [30, 30],
 iconAnchor: [15, 30],
 popupAnchor: [0, -30]
 });
-
+// --- Normalise Spotify + Apple Music links for embed ---
+function normaliseSongLink(link) {
+ if (!link) return "";
+ // Fix Spotify regional / share variations
+ link = link.replace("open.spotify.com/intl-en/", "open.spotify.com/");
+ link = link.replace("open.spotify.com/", "https://open.spotify.com/");
+ // Fix Apple Music embed prefix
+ if (link.includes("music.apple.com") && !link.includes("embed.music.apple.com")) {
+   link = link.replace("music.apple.com", "embed.music.apple.com");
+ }
+ // Default to UK region if none present (you’re in the UK 🇬🇧)
+ if (link.includes("embed.music.apple.com/") && !/embed\.music\.apple\.com\/[a-z]{2}\//.test(link)) {
+   link = link.replace("embed.music.apple.com/", "embed.music.apple.com/gb/");
+ }
+ return link;
+}
 // Embed generator
 function getEmbedHTML(songLink) {
 if (!songLink) return "";
 
+songLink = normaliseSongLink(songLink);
+  
 let embedHTML = "";
 
 // YouTube
