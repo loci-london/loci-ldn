@@ -1,4 +1,4 @@
-// when u initialise firebase
+
 const firebaseConfig = {
 apiKey: "AIzaSyANy4eUYrkCg-WIKd8aYbDehoxLXeWo8w",
 authDomain: "loci-ldn.firebaseapp.com",
@@ -11,10 +11,10 @@ measurementId: "G-KZ3H3L6K2Y"
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// map setup 
+
 const map = L.map('map').setView([51.5074, -0.1278], 12);
 
-// greater London boundary
+
 const greaterLondonBounds = L.polygon([
 [51.7342, -0.5103],
 [51.6747, 0.2156],
@@ -30,14 +30,14 @@ subdomains: 'abcd',
 maxZoom: 19
 }).addTo(map);
 
-// star icon
+
 const customIcon = L.icon({
 iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
 iconSize: [30, 30],
 iconAnchor: [15, 30],
 popupAnchor: [0, -30]
 });
-// --- normalise spotify ---
+
 function normaliseSongLink(link) {
  if (!link) return "";
 
@@ -47,13 +47,13 @@ function normaliseSongLink(link) {
  if (link.includes("music.apple.com") && !link.includes("embed.music.apple.com")) {
    link = link.replace("music.apple.com", "embed.music.apple.com");
  }
- // default to uk 
+
  if (link.includes("embed.music.apple.com/") && !/embed\.music\.apple\.com\/[a-z]{2}\//.test(link)) {
    link = link.replace("embed.music.apple.com/", "embed.music.apple.com/gb/");
  }
  return link;
 }
-// embed
+
 function getEmbedHTML(songLink) {
 if (!songLink) return "";
 
@@ -61,14 +61,14 @@ songLink = normaliseSongLink(songLink);
   
 let embedHTML = "";
 
-// YouTube
+
 if (songLink.includes("youtube.com") || songLink.includes("youtu.be")) {
 const videoId = songLink.includes("youtu.be")
 ? songLink.split("youtu.be/")[1].split("?")[0]
 : new URL(songLink).searchParams.get("v");
 embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
 
-// Spotify
+
 } else if (songLink.includes("spotify.com")) {
    const match = songLink.match(/track\/([a-zA-Z0-9]+)/);
    if (match) {
@@ -80,12 +80,12 @@ embedHTML = `<iframe width="230" height="130" src="https://www.youtube.com/embed
 </iframe>`;
    }
 
-// SoundCloud
+
 } else if (songLink.includes("soundcloud.com")) {
 embedHTML = `<iframe width="100%" height="166" scrolling="no" frameborder="no"
 src="https://w.soundcloud.com/player/?url=${encodeURIComponent(songLink)}&color=%230066cc&inverse=false&auto_play=false&show_user=true"></iframe>`;
 
-// Apple Music
+
 } else if (songLink.includes("music.apple.com")) {
 const parts = songLink.split("/id");
 const songId = parts[1]?.split("?")[0];
@@ -99,7 +99,7 @@ src="https://embed.music.apple.com/us/song/${songId}"></iframe>`;
 return embedHTML;
 }
 
-// load existing markers
+
 db.collection("memories").get().then(snapshot => {
 snapshot.forEach(doc => {
 const data = doc.data();
@@ -107,7 +107,7 @@ createMarker(data.lat, data.lng, data.memory, data.songLink);
 });
 });
 
-// map click
+
 map.on('click', function (e) {
 const lat = e.latlng.lat;
 const lng = e.latlng.lng;
@@ -129,7 +129,7 @@ alert("Sorry, this map only accepts locations within Greater London.");
 }
 });
 
-// memory
+
 function addMemory(lat, lng) {
 const memory = document.getElementById('memory').value;
 const songLink = document.getElementById('songLink').value;
@@ -156,7 +156,7 @@ console.error("Error adding document: ", error);
 });
 }
 
-// styled marker and player embedding
+
 function createMarker(lat, lng, memory, songLink) {
 const embedHTML = getEmbedHTML(songLink);
 
@@ -170,7 +170,7 @@ L.marker([lat, lng], { icon: customIcon })
 .bindPopup(finalPopup);
 }
 
-// help box
+
 document.addEventListener("DOMContentLoaded", function () {
 const helpButton = document.getElementById("help-button");
 const helpBox = document.getElementById("help-box");
@@ -187,13 +187,13 @@ helpBox.style.display = "none";
 });
 });
 
-// dismiss intro overlay
+
 document.addEventListener('click', () => {
 const overlay = document.getElementById('introOverlay');
 if (overlay) overlay.style.display = 'none';
 }, { once: true });
 
-// Shuffle button 
+
 document.getElementById('shuffleBtn').addEventListener('click', () => {
 db.collection("memories").get().then(snapshot => {
 const allDocs = snapshot.docs;
