@@ -14,7 +14,7 @@ const db = firebase.firestore();
 // Map setup
 const map = L.map('map').setView([51.5074, -0.1278], 12);
 
-// Greater London boundary (rough polygon)
+// Greater London boundary
 const greaterLondonBounds = L.polygon([
 [51.7342, -0.5103],
 [51.6747, 0.2156],
@@ -30,14 +30,14 @@ subdomains: 'abcd',
 maxZoom: 19
 }).addTo(map);
 
-// Custom star icon
+// star icon
 const customIcon = L.icon({
 iconUrl: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
 iconSize: [30, 30],
 iconAnchor: [15, 30],
 popupAnchor: [0, -30]
 });
-// --- Normalise Spotify + Apple Music links for embed ---
+// --- normalise spotify ---
 function normaliseSongLink(link) {
  if (!link) return "";
  // Fix Spotify regional / share variations
@@ -47,13 +47,13 @@ function normaliseSongLink(link) {
  if (link.includes("music.apple.com") && !link.includes("embed.music.apple.com")) {
    link = link.replace("music.apple.com", "embed.music.apple.com");
  }
- // Default to UK region if none present (you’re in the UK 🇬🇧)
+ // default to uk 
  if (link.includes("embed.music.apple.com/") && !/embed\.music\.apple\.com\/[a-z]{2}\//.test(link)) {
    link = link.replace("embed.music.apple.com/", "embed.music.apple.com/gb/");
  }
  return link;
 }
-// Embed generator
+// embed
 function getEmbedHTML(songLink) {
 if (!songLink) return "";
 
@@ -99,7 +99,7 @@ src="https://embed.music.apple.com/us/song/${songId}"></iframe>`;
 return embedHTML;
 }
 
-// Load existing markers
+// load existing markers
 db.collection("memories").get().then(snapshot => {
 snapshot.forEach(doc => {
 const data = doc.data();
@@ -107,7 +107,7 @@ createMarker(data.lat, data.lng, data.memory, data.songLink);
 });
 });
 
-// Map click
+// map click
 map.on('click', function (e) {
 const lat = e.latlng.lat;
 const lng = e.latlng.lng;
@@ -129,7 +129,7 @@ alert("Sorry, this map only accepts locations within Greater London.");
 }
 });
 
-// Add memory
+// memory
 function addMemory(lat, lng) {
 const memory = document.getElementById('memory').value;
 const songLink = document.getElementById('songLink').value;
@@ -156,7 +156,7 @@ console.error("Error adding document: ", error);
 });
 }
 
-// Create styled marker and embed player
+// styled marker and player embedding
 function createMarker(lat, lng, memory, songLink) {
 const embedHTML = getEmbedHTML(songLink);
 
@@ -193,7 +193,7 @@ const overlay = document.getElementById('introOverlay');
 if (overlay) overlay.style.display = 'none';
 }, { once: true });
 
-// Shuffle button logic
+// Shuffle button 
 document.getElementById('shuffleBtn').addEventListener('click', () => {
 db.collection("memories").get().then(snapshot => {
 const allDocs = snapshot.docs;
