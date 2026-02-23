@@ -1,4 +1,4 @@
-// Initialize Firebase
+// when u initialise firebase
 const firebaseConfig = {
 apiKey: "AIzaSyANy4eUYrkCg-WIKd8aYbDehoxLXeWo8w",
 authDomain: "loci-ldn.firebaseapp.com",
@@ -11,10 +11,10 @@ measurementId: "G-KZ3H3L6K2Y"
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Map setup
+// map setup 
 const map = L.map('map').setView([51.5074, -0.1278], 12);
 
-// Greater London boundary
+// greater London boundary
 const greaterLondonBounds = L.polygon([
 [51.7342, -0.5103],
 [51.6747, 0.2156],
@@ -40,10 +40,10 @@ popupAnchor: [0, -30]
 // --- normalise spotify ---
 function normaliseSongLink(link) {
  if (!link) return "";
- // Fix Spotify regional / share variations
+
  link = link.replace("open.spotify.com/intl-en/", "open.spotify.com/");
  link = link.replace("open.spotify.com/", "https://open.spotify.com/");
- // Fix Apple Music embed prefix
+
  if (link.includes("music.apple.com") && !link.includes("embed.music.apple.com")) {
    link = link.replace("music.apple.com", "embed.music.apple.com");
  }
@@ -170,7 +170,7 @@ L.marker([lat, lng], { icon: customIcon })
 .bindPopup(finalPopup);
 }
 
-// Help box toggle
+// help box
 document.addEventListener("DOMContentLoaded", function () {
 const helpButton = document.getElementById("help-button");
 const helpBox = document.getElementById("help-box");
@@ -187,7 +187,7 @@ helpBox.style.display = "none";
 });
 });
 
-// Dismiss intro overlay
+// dismiss intro overlay
 document.addEventListener('click', () => {
 const overlay = document.getElementById('introOverlay');
 if (overlay) overlay.style.display = 'none';
