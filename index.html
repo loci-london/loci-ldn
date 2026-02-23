@@ -5,25 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
 <title>-- LOCI: LDN --</title>
-<!-- Social preview meta tags -->
+
 <meta property="og:title" content="LOCI: LDN" />
 <meta property="og:description" content="Memory, Music, Place. A collaborative sonic map of London." />
 <meta property="og:image" content="https://loci-ldn.co.uk/assets/logo.png.jpeg" />
 <meta property="og:url" content="https://loci-ldn.co.uk" />
 <meta name="twitter:card" content="summary_large_image" />
-<!-- Google Fonts -->
+
 <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet" />
-<!-- Leaflet CSS -->
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<!-- Your styles -->
+
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <button id="shuffleBtn" title="jump to a random memory">✶ spin</button>
-<!-- ✶ Zine-style menu button -->
+
 <div class="menu-button" onclick="toggleMenu()">✶ menu</div>
-<!-- Slide-out menu -->
+
 <div id="slide-menu" class="slide-menu">
 <ul>
 <li><a href="about.html">about</a></li>
@@ -50,23 +50,23 @@
 <p>click anywhere on the map<br>leave a memory<br>add a song</p>
 </div>
 </div>
-<!-- Leaflet JS -->
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Firebase -->
+
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-<!-- Your logic -->
+
 <script src="script.js"></script>
 <div id="help-button">?</div>
 <div id="help-box">
 <p>click anywhere on the map<br>leave a memory<br>add a song</p>
 </div>
-<!-- Menu toggle script -->
+
 <script>
  function toggleMenu() {
    document.getElementById("slide-menu").classList.toggle("open");
  }
- // Close menu when clicking outside it
+
  window.addEventListener("click", function (e) {
    const menu = document.getElementById("slide-menu");
    const button = document.querySelector(".menu-button");
